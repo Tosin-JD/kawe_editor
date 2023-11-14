@@ -117,7 +117,7 @@ class TextEditor(TkinterDnD.Tk):
         config = configparser.ConfigParser()
         config_file_path = os.path.expanduser("~/.text_editor_config.ini")
 
-        config["Settings"] = {"last_file": self.current_file}
+        config["Settings"] = {"last_file": str(self.current_file)}
 
         with open(config_file_path, "w") as configfile:
             config.write(configfile)

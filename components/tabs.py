@@ -26,7 +26,7 @@ class ConvertTab(ttk.Frame):
         convert_toolbar = ttk.Frame(self)
         convert_toolbar.pack(fill=tk.BOTH)
 
-        itt_button = ttk.Button(convert_toolbar, text="Convert Image", 
+        itt_button = ttk.Button(convert_toolbar, text="Convert Scanned Images", 
                                 command=parent.convert_image_to_text)
         correct_word_button = ttk.Button(convert_toolbar, text="Correct Words", 
                                          command=parent.correct_words)
