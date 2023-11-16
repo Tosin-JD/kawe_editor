@@ -16,7 +16,7 @@ import re
 import nltk
 
 from components.find import FindWindow, ReplaceWindow
-from components.menu import TextEditorMenu, MainMenu
+from components.menu import MainMenu
 from components.tabs import HomeTab, ConvertTab  
 from components.spellchecker import SpellcheckText
 import os
@@ -52,13 +52,16 @@ class TextEditor(TkinterDnD.Tk):
         self.text = SpellcheckText(self, wrap=tk.WORD)
         self.text.grid(column=0, row=1, sticky="nsew")
         
-        self.vertical_scrolbar = ttk.Scrollbar(self, orient="vertical")
-        self.vertical_scrolbar.grid(column=1, row=1, sticky="ns")
-        self.vertical_scrolbar.config(command=self.text.yview)
+        self.vertical_scrollbar = ttk.Scrollbar(self, orient="vertical",
+                                               command=self.text.yview)
+        self.vertical_scrollbar.grid(column=1, row=1, sticky="ns")
         
-        self.horizontal_scrolbar = ttk.Scrollbar(self, orient="horizontal")
-        self.horizontal_scrolbar.grid(column=0, row=2, sticky="ew")
-        self.horizontal_scrolbar.config(command=self.text.xview)
+        self.horizontal_scrollbar = ttk.Scrollbar(self, orient="horizontal",
+                                                 command=self.text.xview)
+        self.horizontal_scrollbar.grid(column=0, row=2, sticky="ew")
+        
+        self.text['yscrollcommand'] = self.vertical_scrollbar.set
+        self.text['xscrollcommand'] = self.horizontal_scrollbar.set
         
         # Create a menu bar
         self.menu = MainMenu(self)
@@ -75,6 +78,7 @@ class TextEditor(TkinterDnD.Tk):
         self.text.bind("<B1-Motion>", self.update_status)
         self.text.drop_target_register(DND_FILES)
         self.text.dnd_bind('<<Drop>>', self.drop)
+        self.shortcuts()
         self.protocol("WM_DELETE_WINDOW", self.exit_app)
 
     def correct_words(self):
@@ -148,7 +152,6 @@ class TextEditor(TkinterDnD.Tk):
         if file_paths:
             try:
                 self.convert(file_paths)
-                # Clear the current file path after converting from all images
                 self.current_file = None
                 self.update_status()
             except Exception as e:
@@ -217,6 +220,17 @@ class TextEditor(TkinterDnD.Tk):
         words = text.split()
         return len(words)
     
+    def shortcuts(self):
+        self.bind('<Control-f>', lambda event=None: self.find())
+        self.bind('<Control-h>', lambda event=None: self.replace())
+        self.bind('<Control-n>', lambda event=None: self.new_file())
+        self.bind('<Control-o>', lambda event=None: self.menu.open_file())
+        self.bind('<Control-s>', lambda event=None: self.menu.save_file())
+        self.bind('<Control-Shift-s>', lambda event=None: self.menu.save_file_as())
+        self.bind('<Control-a>', lambda event=None: self.select_all())
+        self.bind('<Control-q>', lambda event=None: self.exit_app())
+        self.bind('<Control-w>', lambda event=None: self.toggle_word_wrap())
+        
     def exit_app(self):
         self.save_last_opened_file()
         self.destroy()
@@ -224,23 +238,25 @@ class TextEditor(TkinterDnD.Tk):
     def select_all(self):
         self.text.tag_add("sel", "1.0", "end")
         self.update_status()
-
+    
     def toggle_word_wrap(self):
         self.word_wrap = not self.word_wrap
         wrap_setting = tk.WORD if self.word_wrap else tk.NONE
         self.text.config(wrap=wrap_setting)
         self.update_status()
         
-    def cntrlf(self):
+    def find_shortcut(self, event=None):
         self.find()
     
     def find(self):
         window = FindWindow(self)
         window.grab_set()
+        window.wm_transient(self)
         
     def replace(self):
         window = ReplaceWindow(self)
         window.grab_set()
+        window.wm_transient(self)
     
 if __name__ == "__main__":
     editor = TextEditor()

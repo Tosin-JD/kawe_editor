@@ -1,33 +1,9 @@
-# components.menu
+"""
+components.menu
+"""
 
 import tkinter as tk
 from tkinter import ttk, filedialog
-
-class TextEditorMenu:
-    def __init__(self, root, text_editor):
-        self.root = root
-        self.text_editor = text_editor
-
-        # Create a menu bar
-        self.menubar = tk.Menu(self.root)
-        self.root.config(menu=self.menu_bar)
-        self.menu_bar.config(tearoff=False)
-
-        # Create the File menu
-        self.file_menu = tk.Menu(self.menu_bar)
-        self.menu_bar.add_cascade(label="File", menu=self.file_menu)
-        self.file_menu.add_command(label="New", command=self.text_editor.new_file, accelerator="Ctrl+N")
-        self.file_menu.add_command(label="Open", command=self.text_editor.open_file, accelerator="Ctrl+O")
-        self.file_menu.add_command(label="Save", command=self.text_editor.save_file, accelerator="Ctrl+S")
-        self.file_menu.add_command(label="Save As...", command=self.text_editor.save_file_as, accelerator="Ctrl+Shift+S")
-        self.file_menu.add_separator()
-        self.file_menu.add_command(label="Exit", command=self.text_editor.exit_app)
-
-        # Create the Edit menu
-        print("TextEditorMenu __init__ called")
-        
-        
-import tkinter as tk
 from tkinter import messagebox
 
 class MainMenu(tk.Menu):
@@ -60,7 +36,17 @@ class MainMenu(tk.Menu):
         self.view_menu = tk.Menu(self, relief="flat")
         self.add_cascade(label="View", menu=self.view_menu)
         self.view_menu.add_checkbutton(label="Word Wrap", command=self.master.toggle_word_wrap, accelerator="Ctrl+W")
+        
+        self.theme_menu = tk.Menu(self.view_menu, relief="flat")
+        self.view_menu.add_cascade(label="Theme", menu=self.theme_menu)
 
+        # Adding menu items for each theme
+        self.theme_menu.add_command(label="Radiance", command=lambda: self.master.style.set_theme('radiance'))
+        self.theme_menu.add_command(label="Blue", command=lambda: self.master.style.set_theme('blue'))
+        self.theme_menu.add_command(label="ScidBlue", command=lambda: self.master.style.set_theme('scidblue'))
+        self.theme_menu.add_command(label="Plastic", command=lambda: self.master.style.set_theme('plastik'))
+        self.theme_menu.add_command(label="Arc", command=lambda: self.master.style.set_theme('arc'))
+        
     def create_help_menu(self):
         help_menu = tk.Menu(self, tearoff=0, relief="flat")  
         help_menu.add_command(label="About", command=self.master.toggle_word_wrap)  

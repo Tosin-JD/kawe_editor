@@ -58,7 +58,7 @@ class FindWindow(tk.Toplevel):
 
             # Find all occurrences of the word
             matches = [m.start() for m in re.finditer(fr'\b{re.escape(word_to_find)}\b', text, re.IGNORECASE)]
-
+            
             # Remove previous highlights
             self.text.tag_remove("highlight", "1.0", tk.END)
 
@@ -75,15 +75,13 @@ class FindWindow(tk.Toplevel):
                     self.text.tag_add("highlight", f"1.0+{start_index}c", f"1.0+{end_index}c")
                     self.text.tag_config("highlight", background="#ccccff")
                 self.text.tag_remove("red_highlight", "1.0", tk.END)
-                match_length = len(matches) - 1
+                match_length = len(matches)
+                
                 if self.counter < match_length:
-                    print("Before: ", self.counter)
                     self.text.tag_add("red_highlight", f"1.0+{current_index}c", f"1.0+{current_end_index}c")
                     self.counter += 1
-                    print("After: ", self.counter)
-                    print("Length: ", match_length)
-                else:
-                    self.counter = 0
+                    if self.counter == len(matches):
+                        self.counter = 0
             else:
                 self.matches = []
 
