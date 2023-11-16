@@ -32,6 +32,7 @@ For Windows
 
 ### How To Use
 You can create a text file to edit like every other basic text editor.
+
 You can convert scanned images to text.
 
 
