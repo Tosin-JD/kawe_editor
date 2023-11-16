@@ -25,6 +25,13 @@ class SpellcheckText(tk.Text):
         """Intercept the Tk commands to the text widget and if eny of the content
         modifying commands are called, post a TextModified event."""
         cmd = (self._proxy, command)
+
+        # avoid error when copying
+        if command == 'get' and (args[0] == 'sel.first' and args[1] == 'sel.last') and not self.tag_ranges('sel'): return ""
+
+        # avoid error when deleting
+        if command == 'delete' and (args[0] == 'sel.first' and args[1] == 'sel.last') and not self.tag_ranges('sel'): return
+
         if args:
             cmd = cmd + args
         result = self.tk.call(cmd)
@@ -51,38 +58,10 @@ class SpellcheckText(tk.Text):
         num_lines = [int(val) for val in self.index("end").split(".")][0]
         for line in range(1, num_lines):
             data = self.get(f"{line}.0 linestart", f"{line}.0 lineend")
-            for word,pos in self.tokenize(data):
+            for word, pos in self.tokenize(data):
                 check = self.corpus.check(word)
                 # print(f"{word},{pos},{check}")
                 if not check:
                     start = f"{line}.{pos}"
                     end = f"{line}.{pos + len(word)}"
                     self.tag_add("sic", start, end)
-
-
-class App(ttk.Frame):
-    def __init__(self, master, **kwargs):
-        super(App, self).__init__(master, **kwargs)
-        master.wm_withdraw()
-        self.create_ui()
-        self.grid(row=0, column=0, sticky=tk.NSEW)
-        master.grid_rowconfigure(0, weight=1)
-        master.grid_columnconfigure(0, weight=1)
-        master.wm_deiconify()
-
-    def create_ui(self):
-        text = SpellcheckText(self)
-        vs = ttk.Scrollbar(self, command=text.yview)
-        text.configure(yscrollcommand=vs.set)
-        text.grid(row=0, column=0, sticky=tk.NSEW)
-        vs.grid(row=0, column=1, sticky=tk.NSEW)
-        self.grid_rowconfigure(0, weight=1)
-        self.grid_columnconfigure(0, weight=1)
-
-def main(args=None):
-    root = tk.Tk()
-    app = App(root)
-    root.mainloop()
-
-if __name__ == '__main__':
-    sys.exit(main(sys.argv[1:]))

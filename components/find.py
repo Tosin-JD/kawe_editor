@@ -6,7 +6,8 @@ class FindWindow(tk.Toplevel):
     def __init__(self, parent):
         super().__init__(parent)
         self.geometry('400x100')
-        self.title('Search')
+        self.title('Find')
+        self.resizable(0,0)
         self.configure(bg="white")
         
         self.text = parent.text
@@ -56,28 +57,31 @@ class FindWindow(tk.Toplevel):
                 word_to_find = word_to_find.lower()
 
             # Find all occurrences of the word
-            matches = [m.start() for m in re.finditer(fr'\b{re.escape(word_to_find)}\b', text)]
+            matches = [m.start() for m in re.finditer(fr'\b{re.escape(word_to_find)}\b', text, re.IGNORECASE)]
 
             # Remove previous highlights
             self.text.tag_remove("highlight", "1.0", tk.END)
 
             # If there are matches, highlight the first word with a red background
             if matches:
-                current_index = matches[0 + self.counter]
+                current_index = matches[self.counter]
                 current_end_index = current_index + len(word_to_find)
                 self.text.tag_add("red_highlight", f"1.0+{current_index}c", f"1.0+{current_end_index}c")
-                self.text.tag_config("red_highlight", background="red")
+                self.text.tag_config("red_highlight", background="#ffcccc")
 
                 # If there are more matches, highlight them in blue
                 for start_index in matches:
                     end_index = start_index + len(word_to_find)
                     self.text.tag_add("highlight", f"1.0+{start_index}c", f"1.0+{end_index}c")
-                    self.text.tag_config("highlight", background="blue")
+                    self.text.tag_config("highlight", background="#ccccff")
                 self.text.tag_remove("red_highlight", "1.0", tk.END)
                 match_length = len(matches) - 1
                 if self.counter < match_length:
-                    self.counter += 1
+                    print("Before: ", self.counter)
                     self.text.tag_add("red_highlight", f"1.0+{current_index}c", f"1.0+{current_end_index}c")
+                    self.counter += 1
+                    print("After: ", self.counter)
+                    print("Length: ", match_length)
                 else:
                     self.counter = 0
             else:
@@ -111,6 +115,7 @@ class ReplaceWindow(FindWindow):
         self.original_text = self.text.get(1.0, tk.END)
 
     def replace(self):
+        self.find()
         word_to_find = self.find_entry.get()
         word_to_replace = self.replace_entry.get()
         if word_to_find:
@@ -118,7 +123,7 @@ class ReplaceWindow(FindWindow):
             if not self.case_sensitive_var.get():
                 text = text
                 word_to_find = word_to_find.lower()
-            matches = [m.start() for m in re.finditer(fr'\b{re.escape(word_to_find)}\b', text)]
+            matches = [m.start() for m in re.finditer(fr'\b{re.escape(word_to_find)}\b', text, re.IGNORECASE)]
 
             # Replace the first occurrence of the word
             if self.counter - 1 < len(matches):
@@ -131,12 +136,13 @@ class ReplaceWindow(FindWindow):
                 self.text.insert(tk.END, text)
 
     def replace_all(self):
+        self.find()
         word_to_find = self.find_entry.get()
         word_to_replace = self.replace_entry.get()
         if word_to_find and word_to_replace:
             text = self.original_text  # Use the original case of the text
             if not self.case_sensitive_var.get():
-                text = text.lower()
+                text = text
                 word_to_find = word_to_find.lower()
 
             # Replace all occurrences of the word

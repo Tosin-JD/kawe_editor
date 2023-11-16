@@ -76,7 +76,7 @@ class TextEditor(TkinterDnD.Tk):
         self.text.drop_target_register(DND_FILES)
         self.text.dnd_bind('<<Drop>>', self.drop)
         self.protocol("WM_DELETE_WINDOW", self.exit_app)
-        
+
     def correct_words(self):
         selected_text = self.get_selected_text()
         if selected_text:
