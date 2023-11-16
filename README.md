@@ -13,23 +13,25 @@ c. or you can download the code as a zip file
 
 3. Open the file directory with your command line interface.
 
-4. Create a virtual environment with python -m venv env
+4. Create a virtual environment with
+   `python -m venv env`
 
 5. Activate the virtual environment with
 For Linux
-source env/bin/activate 
+`source env/bin/activate`
 
 For Windows
-\env\Scripts\activate
+`\env\Scripts\activate`
 
 6. Install the dependencies using the line below.
-pip install -r requirements.txt
+`pip install -r requirements.txt`
 
 7. Run the code with
-python app.py
+`python app.py`
 
 
 ### How To Use
-
+You can create a text file to edit like every other basic text editor.
+You can convert scanned images to text.
 
 
