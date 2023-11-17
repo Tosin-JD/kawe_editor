@@ -4,10 +4,10 @@ The first intention for creating Kawe Editor is to help those who do not have co
 
 ## How To Install
 ### For Developers
-1. Clone the project into your local computer using 
-a. git clone https://github.com/Tosin-JD/kawe_editor.git for HTTPS
-b. git clone git@github.com:Tosin-JD/kawe_editor.git for SSH
-c. or you can download the code as a zip file
+1. Clone the project into your local computer using   
+a. `git clone https://github.com/Tosin-JD/kawe_editor.git` for HTTPS   
+b. `git clone git@github.com:Tosin-JD/kawe_editor.git` for SSH  
+c. or you can download the code as a zip file  
 
 2. Extract the Extract the code if you downloaded the zip file.
 
