@@ -1,7 +1,10 @@
 # Kawe Editor
 This is a text editor for PCs that can convert scanned images to text.
 The first intention for creating Kawe Editor is to help those who do not have constant access to the internet to be able to convert their image files to text for use any time any day.
+![alt text](https://github.com/Tosin-JD/kawe_editor/blob/main/kawe%20editor.png)  
 
+The image to text tab.  
+![alt text](https://github.com/Tosin-JD/kawe_editor/blob/main/kawe%20editor.png)  
 ## How To Install
 ### For Developers
 1. Clone the project into your local computer using   
